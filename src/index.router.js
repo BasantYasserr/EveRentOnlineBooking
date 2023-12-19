@@ -13,7 +13,6 @@ import cors from 'cors'
 
 const initApp = async(app, express) => {
 
-    app.use(cors())      //allow access from anywhere
 
     //Convert Buffer Data
     app.use(express.json({}))
