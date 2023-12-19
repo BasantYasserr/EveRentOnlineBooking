@@ -19,6 +19,9 @@ const initApp = async(app, express) => {
     app.use(express.json({}))
 
     //Set API Routing
+    app.get("/",(req,res,next)=>{
+        return res.status(200).json({message:"Welcome to EveRent"})
+    })
     app.use(`/auth`, authRouter)
    
     app.use(`/booking`, bookingRouter)
@@ -36,7 +39,7 @@ const initApp = async(app, express) => {
     // app.use(`/reviews`)
 
     app.all('*', (req, res, next) => {
-       return res.send("hello mother fucker")
+       return res.status(404).send("In-Valid Routing Plz Check url or method")
     })
     
     app.use(globalErrorHandling)
