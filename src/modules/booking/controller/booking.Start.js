@@ -14,7 +14,7 @@ import Stripe from "stripe";
 
 
 export const CreateBooking = asyncHandler(async(req,res,next)=>{
-    const { payment, coupon } = req.body;
+    const { payments, coupon } = req.body;
 
     const cart = await CartModel.findOne({user : req.user._id});
     const events = cart.events;
@@ -57,7 +57,7 @@ export const CreateBooking = asyncHandler(async(req,res,next)=>{
         },
         bookingPrice,
         price : bookingPrice - (bookingPrice *((req.body.coupon?.amount || 0) / 100)).toFixed(2),
-        payment,
+        payments,
         status : 'waitPayment'
     })
 
