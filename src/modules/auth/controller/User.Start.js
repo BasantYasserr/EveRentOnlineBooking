@@ -23,9 +23,9 @@ export const Signup = asyncHandler(async (req,res,next)=>{
         return next(new Error('Please upload user image'))
     }
     const id =   new mongoose.mongo.ObjectId();
-    while (await UserModel.findById(id)) {
-        id =   new mongoose.mongo.ObjectId();;
-    }
+    // while (await UserModel.findById(id)) {
+    //     id =   new mongoose.mongo.ObjectId();;
+    // }
     const idString = id.toString()
 
     const {secure_url , public_id} = await cloudinary.uploader.upload(req.file.path, { folder: `Everent/Users/${idString}`});
