@@ -12,10 +12,13 @@ export const createCategory = asyncHandler (async (req,res,next) =>{
     if (await CategoryModel.findOne({ name })) {
         return next(new Error(`Duplicate category name ${name}`, { cause: 400}))
     }
-
+    var image={};
+    if(req.file){
     const {secure_url , public_id} = await cloudinary.uploader.upload(req.file.path, { folder: `${process.env.APP_NAME}/category`})
+     image =  {secure_url , public_id};
+    }
+
     const slug =slugify(name, '-');
-    const image =  {secure_url , public_id};
     const category = await CategoryModel.create(
        {name , slug , image , UserId :req.user.id}
     )

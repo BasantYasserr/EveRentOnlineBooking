@@ -37,11 +37,18 @@ export const isAuth = (accessRoles = [])=>{
         )
         if (!findUser) {
         return next(new Error('Please SignUp', { cause: 400 }))
-        }
+        }   
+        
+    req.user = findUser
+
         if(!accessRoles.includes(req.user.role)){
+       
             return next(new Error('Not Authorized User', {cause:403}))
         }
-        req.user = findUser
+    
+    
+        
+        
         next()
     } catch (error) {
         // token  => search in db
