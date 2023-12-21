@@ -13,8 +13,8 @@ import { generateToken } from '../../../utlis/tokenFunction.js'
 
 export const Signup = asyncHandler(async (req,res,next)=>{
     const {email, username, firstName, lastName,  password, age, gender, cPassword} = req.body;
-
-    if (await UserModel.findOne({email})){
+    const usercheck =await UserModel.findOne({email})
+    if (usercheck){
         return next( Error('User Exist', {cause:409}));
     }
     else if(password != cPassword){
@@ -24,12 +24,14 @@ export const Signup = asyncHandler(async (req,res,next)=>{
         return next(new Error('Please upload user image'))
     }
     const id =   new mongoose.mongo.ObjectId();
-    // while (await UserModel.findById(id)) {
-    //     id =   new mongoose.mongo.ObjectId();;
-    // }
+     while (await UserModel.findById(id)) {
+         id =   new mongoose.mongo.ObjectId();;
+     }
     const idString = id.toString()
 
     const {secure_url , public_id} = await cloudinary.uploader.upload(req.file.path, { folder: `Everent/Users/${idString}`});
+
+    const token = jwt.sign({  email, user:{email,_id:id, username,firstName, lastName, password ,age ,gender,image: {public_id  , secure_url},confirmEmail:true } }, process.env.EMAIL_SIG, { expiresIn: 60 * 5 });
     const link = `${req.protocol}://${req.headers.host}/auth/confirmEmail/${token}`
     const requestNewEmailLink = `${req.protocol}://${req.headers.host}/auth/newConfirmEmail/${newConfirmEmailToken}`      
     const html = `<!DOCTYPE html>
@@ -127,7 +129,6 @@ export const Signup = asyncHandler(async (req,res,next)=>{
    </table>
    </body>
    </html>`
-    const token = jwt.sign({  email, user:{email,_id:id, username,firstName, lastName, password ,age ,gender,image: {public_id  , secure_url},confirmEmail:true } }, process.env.EMAIL_SIG, { expiresIn: 60 * 5 });
     const newConfirmEmailToken = jwt.sign({  email }, process.env.EMAIL_SIG);
         
     const MailSent = await SendMail({ to: email, subject: "Confirmation Email", html })
