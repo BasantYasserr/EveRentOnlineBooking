@@ -168,7 +168,7 @@ export const Login = asyncHandler(async(req,res,next)=>{
     user.token = token ;
     user.status = 'online'
     await user.save();
-    res.status().json(user)
+    res.status(201).json(user)
 
 })
 
