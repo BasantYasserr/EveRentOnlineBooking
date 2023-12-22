@@ -20,9 +20,9 @@ export const Signup = asyncHandler(async (req,res,next)=>{
     else if(password != cPassword){
         return next( Error('Password Doesn`t Match'), {cause:403});
     }
-    else if(!req.file){
-        return next(new Error('Please upload user image'))
-    }
+    // else if(!req.file){
+    //     return next(new Error('Please upload user image'))
+    // }
     const id =   new mongoose.mongo.ObjectId();
      while (await UserModel.findById(id)) {
          id =   new mongoose.mongo.ObjectId();;

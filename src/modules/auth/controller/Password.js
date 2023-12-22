@@ -11,13 +11,13 @@ export const forgetPassword = asyncHandler(async (req,res,next)=>{
     const {email}= req.body;
     
     const user = await UserModel.findOne({email})
-    
+   
     if(!user){
         return next (new Error('Invalid Email', { cause : 400}))
     }
     const hashId = new mongoose.Types.ObjectId().toString();
-    const Hash =  bycrypt.hashSync(hashId, parseInt(process.env.HASH_ROUNDS));
-    const token = jwt.sign({ email , Hash}, process.env.RESET_SIG, { expiresIn: 60 * 5 });
+    const token = jwt.sign({email:email , hashId:hashId}, process.env.RESET_SIG, { expiresIn: 60 * 5 });
+
     const ResetLink = `${req.protocol}://${req.headers.host}/user/reset/${token}`
     const html = `<!DOCTYPE html>
     <html>
@@ -113,6 +113,7 @@ export const forgetPassword = asyncHandler(async (req,res,next)=>{
     </table>
     </body>
     </html>`
+   
     const isEmailSent =await SendMail({ to: email, subject: "Reset Password Email", html });
     if(!isEmailSent ){
         return next(new Error('Failed to send', {cause:400}))
