@@ -14,7 +14,7 @@ export const eventsbytitle = asyncHandler(async(req,res,next)=>{
 
     const {eventtitle, size, page} = req.query;
     const {limit, skip} = pagination({page,size})
-    const events = await EventModel.find({$or :[{ title : { $regex :  eventtitle , $options : 'i'} },{ desc : { $regex :  productname ,$options:'i'}}]}).limit(limit).skip(skip);
+    const events = await EventModel.find({$or :[{ title : { $regex :  eventtitle , $options : 'i'} },{ desc : { $regex :  eventtitle ,$options:'i'}}]}).limit(limit).skip(skip);
 
     res.status(200).json(events);
 })
