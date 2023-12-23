@@ -16,7 +16,6 @@ const initApp = async(app, express) => {
 
     //Convert Buffer Data
     app.use(express.json({}))
-
     //Set API Routing
     app.get("/",(req,res,next)=>{
         return res.status(200).json({message:"Welcome to EveRent"})

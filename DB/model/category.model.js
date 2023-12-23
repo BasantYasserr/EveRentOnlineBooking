@@ -17,8 +17,17 @@ const CategorySchema = mongoose.Schema({
     UserId : {required : true , type : mongoose.Schema.Types.ObjectId,ref: 'User',},
     CompanyId : {required : false , type : mongoose.Schema.Types.ObjectId,ref: 'Company',},
 
+},{
+    toJSON: {virtuals: true},
+    toObject:{virtuals: true},
+    timestamps: true
 });
+CategorySchema.virtual('eventss',{
+    localField: '_id',
+    foreignField: 'categoryId',
+    ref: 'Event'
+})
 
 const CategoryModel = mongoose.model('Category', CategorySchema)
 
-export default CategoryModel 
+export default CategoryModel  

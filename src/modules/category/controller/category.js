@@ -32,12 +32,20 @@ export const createCategory = asyncHandler (async (req,res,next) =>{
 
 export const getCategory = asyncHandler (async (req,res,next) =>{
     const {id} = req.query;
-    const category = await CategoryModel.findById(id)
-    return res.status(200).json(category)
+    const category = await CategoryModel.findById(id).populate([
+        {
+            path : 'eventss'
+        }
+    ])
+    return res.json(category)
 })
 
 
 export const GetAllCategory = asyncHandler(async(req , res,next)=>{
-    const Category = await CategoryModel.find();
-    res.status (200).json(Category)
+    const Category = await CategoryModel.find().populate([
+        {
+            path : 'eventss'
+        }
+    ])
+    return res.json(Category)
 })
